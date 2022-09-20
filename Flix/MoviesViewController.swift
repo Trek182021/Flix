@@ -10,6 +10,7 @@ import AlamofireImage
 
 struct Constants {
     static var movies = [[String:Any]]()
+    static var colors = [UIColor(red: 0.1529, green: 0.2784, blue: 0.4314, alpha: 1.0), UIColor(red: 0, green: 0.1137, blue: 0.2902, alpha: 1.0)]
 }
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -29,8 +30,21 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         cell.titleLabel.text = movie["title"] as! String
         cell.synopsisLabel.text = movie["overview"] as! String
         cell.posterView.af.setImage(withURL: posterUrl!)
+        cell.backgroundColor = Constants.colors[Int(indexPath.row) % 2]
         
         return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("Loading Screen")
+        
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)!
+        let movie = Constants.movies[indexPath.row]
+        let detailsViewController = segue.destination as! MovieDetailsViewController
+        detailsViewController.movie = movie
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     
